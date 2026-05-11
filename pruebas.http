@@ -1,0 +1,17 @@
+
+// return executeQuery(query, [nombre, autor, fechaRecepcion,0,edadSugerida, editorial,precio,"disponible"]);
+
+
+
+###post para agregar un libro
+POST http://localhost:3000/Libros
+Content-Type: application/json
+
+{
+    "nombre": "El señor de los anillos",
+    "autor": "J.R.R. Tolkien",
+    "fechaRecepcion": "1954-07-29",
+    "edadSugerida": 12,
+    "editorial": "Allen & Unwin",
+    "precio": 20.99    
+}

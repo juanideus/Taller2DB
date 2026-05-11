@@ -17,7 +17,7 @@ const getConnection = async () => {
     console.error("Error al conectar a la base de datos:", error);
   }
 };
-const executeQuery = async (query, params) => {
+export const executeQuery = async (query, params) => {
     try{
         const rows = await pool.query(query, params);
         return rows[0];
