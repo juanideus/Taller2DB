@@ -1,15 +1,17 @@
-import express from 'express';
-import cors from 'cors';
-import libroRouter from './Router/Libro.Router.js';
-import userRouter from './Router/User.router.js';
+import express from "express";
+import cors from "cors";
+import libroRouter from "./Router/Book.router.js";
+import userRouter from "./Router/User.router.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Rutas para libros 
+app.use("/libros", libroRouter);
+//Ruta para copias
+app.use("/copias", libroRouter);
+// Rutas para usuarios
+app.use("/users", userRouter);
 
-app.use('/libros',libroRouter);
-app.use('/users',userRouter);
-app.listen(3000, () => {
-    console.log("Servidor corriendo en el link http://localhost:3000");
+app.listen(8080, () => {
+  console.log("Servidor corriendo en el link http://localhost:8080");
 });
-
-

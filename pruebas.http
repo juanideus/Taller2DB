@@ -4,19 +4,27 @@
 
 
 ###post para agregar un libro
-POST http://localhost:3000/Libros
+POST http://localhost:8080/Libros
 Content-Type: application/json
 
 {
-    "nombre": "El señor de los anillos",
-    "autor": "J.R.R. Tolkien",
-    "fechaRecepcion": "1954-07-29",
-    "edadSugerida": 12,
-    "editorial": "Allen & Unwin",
-    "precio": 20.99    
+  "nombre": "El señor de los anillos2",
+  "autor": "J.R.R. Tolkien",
+  "fechaRecepcion": "2024-06-01",
+  "edadSugerida": 12,
+  "editorial": "Minotauro",
+  "precio": 25
 }
+###post para generar una copia de un libro
+POST http://localhost:8080/Libros/1
+Content-Type: application/json
+
+{
+  "codBarra": "1234567890125"
+}
+
 ###post para agregar un usuario
-POST http://localhost:3000/users
+POST http://localhost:8080/users
 Content-Type: application/json
 
 {
@@ -26,7 +34,7 @@ Content-Type: application/json
   "direccion": "Av. Siempre Viva 123"
 }
 ###patch para actualizar el precio de un libro
-PATCH http://localhost:3000/Libros
+PATCH http://localhost:8080/Libros
 Content-Type: application/json
 
 {
