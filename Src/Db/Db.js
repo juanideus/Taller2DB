@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 const result = dotenv.config();
+console.log(result);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -22,7 +23,7 @@ const getConnection = async () => {
 export const executeQuery = async (query, params) => {
   try {
     const rows = await pool.query(query, params);
-    return rows[0];
+    return rows;
   } catch (error) {
     console.error("Error al ejecutar la consulta:", query, error);
     throw error;

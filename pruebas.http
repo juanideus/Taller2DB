@@ -31,7 +31,7 @@ POST http://localhost:8080/libros/copy
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 3,
   "codBarra": "12213123"
 }
 
@@ -72,7 +72,7 @@ PATCH http://localhost:8080/libros/disable
 Content-Type: application/json
 
 {
-  "id": 1
+  "id": 3
 }
 
 #################################################
@@ -84,3 +84,11 @@ Content-Type: application/json
 {
   "rut": "12345678-9"
 }
+
+
+#################################################
+# VER TODOS LOS LIBROS
+#################################################
+
+GET http://localhost:8080/libros
+Content-Type: application/json

@@ -1,4 +1,4 @@
-import { tr } from "zod/v4/locales";
+import { th, tr } from "zod/v4/locales";
 import { executeQuery } from "../Db/Db.js";
 
 import { HandleError } from "../Util/Error.js";
@@ -18,7 +18,9 @@ export async function addLibro(data) {
   try {
     //validamos si el libro ya existe por nombre y autor
     const querySelect = `SELECT * FROM libro WHERE nombre = ? AND autor = ?`;
-    const resultSelect = await executeQuery(querySelect, [nombre, autor]);
+    const [resultSelect] = await executeQuery(querySelect, [nombre, autor]);
+
+    console.log("resultSelect: ", resultSelect.length);
 
     if (resultSelect.length > 0) {
       throw new HandleError("El libro ya existe", 409);
@@ -68,7 +70,7 @@ export async function patchPriceBook(data) {
     //1. buscar el libro en la base de datos
 
     const querySelect = `SELECT * FROM libro WHERE id = ?`;
-    const resultSelect = await executeQuery(querySelect, [id]);
+    const [resultSelect] = await executeQuery(querySelect, [id]);
     if (resultSelect.length === 0) {
       throw new HandleError("El libro no existe", 404);
     }
@@ -93,14 +95,14 @@ export async function postGenerateCopy(data) {
     console.log("data recibida: ", data);
     console.log({ id, codBarra });
     const querySelect = `SELECT * FROM libro WHERE id = ?`;
-    const resultSelect = await executeQuery(querySelect, [id]);
+    const [resultSelect] = await executeQuery(querySelect, [id]);
 
     if (resultSelect.length === 0) {
       throw new HandleError("El libro no existe", 404);
     }
     //verificamos el codBarra no exista
     const querySelectCopy = `SELECT * FROM copia_libro WHERE codigo_barras = ?`;
-    const resultSelectCopy = await executeQuery(querySelectCopy, [codBarra]);
+    const [resultSelectCopy] = await executeQuery(querySelectCopy, [codBarra]);
 
     if (resultSelectCopy.length > 0) {
       throw new HandleError("El codBarra ya existe", 409);
@@ -124,7 +126,7 @@ export async function disableCopyBook(data) {
     const querySelectDisable = `SELECT * FROM copia_libro WHERE id = ? AND estado = 0`;
     const resultSelectDisable = await executeQuery(querySelectDisable, [id]);
 
-    if (resultSelectDisable.length > 0) {
+    if ([resultSelectDisable].length > 0) {
       throw new HandleError("La copia del libro ya esta deshabilitada", 409);
     }
 
@@ -144,4 +146,28 @@ export async function disableCopyBook(data) {
     }
     throw new HandleError("Error interno del servidor", 500);
   }
+}
+
+export async function showBook() {
+
+  try {
+    
+    const querySearch = 'SELECT * FROM libro;'
+    const [resultQuery]= await executeQuery(querySearch);
+
+    console.log(resultQuery);
+    if (resultQuery.length === 0) {
+      throw new HandleError("No hay libros", 404);
+    }
+
+    
+    return resultQuery;
+
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
+
 }

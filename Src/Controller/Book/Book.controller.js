@@ -5,6 +5,7 @@ import {
   patchPriceBook,
   postGenerateCopy,
   disableCopyBook,
+  showBook,
 } from "../../Model/Book.js";
 import { validateBookParse } from "../../Schema/Book/Book.schema.js";
 import { validateCopyBookParse } from "../../Schema/Book/copyBook.schema.js";
@@ -86,6 +87,22 @@ export async function disableBook(req, res) {
   } catch (error) {
     res.status(error.statusCode || 500).json({
       message: error.message || "Error al deshabilitar la copia del libro",
+    });
+  }
+}
+
+export async function getAllBooks(req, res) {
+  try {
+    const result = await showBook();
+    if (result) {
+      return res.status(200).json({
+        message: "Libros encontrados exitosamente",
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al encontrar los libro",
     });
   }
 }
