@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="NuevoLibro.css" />
+  </head>
+  <body>
+    <h1>Añadir un nuevo Libro</h1>
+
+    <div class="container">
+      <form action="" id="addBook">
+        <input type="text" placeholder="nombre" id="name" required />
+
+        <input
+          type="number"
+          min="1"
+          id="gender"
+          oninput="this.value = this.value.replace('-', '')"
+          placeholder="Genero"
+          required
+        />
+
+        <input type="text" id="autor" placeholder="Autor" required />
+
+        <input type="date" id="date" required />
+
+        <input
+          type="number"
+          min="0"
+          id="copy"
+          oninput="this.value = this.value.replace('-', '')"
+          placeholder="Cantidad de copias"
+          required
+        />
+
+        <input type="number" id="age" placeholder="Edad sugerida" required />
+
+        <input type="text" id="editorial" placeholder="Editorial" required />
+
+        <input
+          type="number"
+          min="0"
+          id="price"
+          oninput="this.value = this.value.replace('-', '')"
+          placeholder="Precio"
+          required
+        />
+
+        <label>
+          <input type="checkbox" id="state" />
+          Disponible
+        </label>
+
+        <button type="submit">Añadir</button>
+      </form>
+
+      <div id="message"></div>
+    </div>
+
+    <button onclick="window.location.href='VerLibros.html'">Ver Libros</button>
+
+    <script type="module" src="./Services/addBook.js"></script>
+  </body>
+</html>

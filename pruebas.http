@@ -1,29 +1,45 @@
+#################################################
+############### API LIBRERÍA ####################
+#################################################
 
-// return executeQuery(query, [nombre, autor, fechaRecepcion,0,edadSugerida, editorial,precio,"disponible"]);
 
+#################################################
+# AGREGAR LIBRO
+#################################################
 
-
-###post para agregar un libro
-POST http://localhost:8080/Libros
+POST http://localhost:8080/libros
 Content-Type: application/json
 
 {
-  "nombre": "El señor de los anillos2",
-  "autor": "J.R.R. Tolkien",
+  "nombre": "Cien años de soledad",
+  "genero": 1,
+  "autor": "Gabriel García Márquez",
   "fechaRecepcion": "2024-06-01",
-  "edadSugerida": 12,
-  "editorial": "Minotauro",
-  "precio": 25
+  "cantCopias": 5,
+  "edadSugerida": 14,
+  "editorial": "Sudamericana",
+  "precio": 18500,
+  "estado": 1
 }
-###post para generar una copia de un libro
-POST http://localhost:8080/Libros/1
+
+
+#################################################
+# GENERAR COPIA DE UN LIBRO
+#################################################
+
+POST http://localhost:8080/libros/copy
 Content-Type: application/json
 
 {
-  "codBarra": "1234567890125"
+  "id": 1,
+  "codBarra": "12213123"
 }
 
-###post para agregar un usuario
+
+#################################################
+# AGREGAR USUARIO
+#################################################
+
 POST http://localhost:8080/users
 Content-Type: application/json
 
@@ -33,11 +49,38 @@ Content-Type: application/json
   "rut": "12345678-9",
   "direccion": "Av. Siempre Viva 123"
 }
-###patch para actualizar el precio de un libro
-PATCH http://localhost:8080/Libros
+
+
+#################################################
+# ACTUALIZAR PRECIO DE UN LIBRO
+#################################################
+
+PATCH http://localhost:8080/libros/price
 Content-Type: application/json
 
 {
   "id": 1,
-  "precio": 30
+  "precio": 41
+}
+
+
+#################################################
+# DESHABILITAR COPIA DE UN LIBRO
+#################################################
+
+PATCH http://localhost:8080/libros/disable
+Content-Type: application/json
+
+{
+  "id": 1
+}
+
+#################################################
+# DESHABILITAR USUARIO
+#################################################
+PATCH http://localhost:8080/users/disable
+Content-Type: application/json
+
+{
+  "rut": "12345678-9"
 }

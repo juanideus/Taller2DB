@@ -7,8 +7,6 @@ app.use(cors());
 app.use(express.json());
 // Rutas para libros 
 app.use("/libros", libroRouter);
-//Ruta para copias
-app.use("/copias", libroRouter);
 // Rutas para usuarios
 app.use("/users", userRouter);
 
