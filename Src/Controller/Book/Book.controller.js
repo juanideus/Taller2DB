@@ -1,12 +1,6 @@
 import e from "express";
 import { executeQuery } from "../../Db/Db.js";
-import {
-  addLibro,
-  patchPriceBook,
-  postGenerateCopy,
-  disableCopyBook,
-  showBook,
-} from "../../Model/Book.js";
+import {addLibro,patchPriceBook,postGenerateCopy,disableCopyBook,showBook,} from "../../Model/Book.js";
 import { validateBookParse } from "../../Schema/Book/Book.schema.js";
 import { validateCopyBookParse } from "../../Schema/Book/copyBook.schema.js";
 import { validateBookPatchPriceParse } from "../../Schema/Book/bookPatch.schema.js";
@@ -19,7 +13,7 @@ export async function addLibros(req, res) {
         message: validator.error.errors.map((e) => e.message).join(", "),
       });
     }
-    const result = await addLibro(req.body);
+    const result = await addLibro(validator.data);
     if (result) {
       res.status(201).json({ message: "Libro agregado exitosamente" });
     }

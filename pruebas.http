@@ -11,9 +11,9 @@ POST http://localhost:8080/libros
 Content-Type: application/json
 
 {
-  "nombre": "Cien años de soledad",
+  "nombre": "Cien años de soledads",
   "genero": 1,
-  "autor": "Gabriel García Márquez",
+  "autor": "Gabriel Garcías Márquez",
   "fechaRecepcion": "2024-06-01",
   "cantCopias": 5,
   "edadSugerida": 14,
@@ -31,7 +31,7 @@ POST http://localhost:8080/libros/copy
 Content-Type: application/json
 
 {
-  "id": 3,
+  "id": 1,
   "codBarra": "12213123"
 }
 
@@ -55,11 +55,11 @@ Content-Type: application/json
 # ACTUALIZAR PRECIO DE UN LIBRO
 #################################################
 
-PATCH http://localhost:8080/libros/price
+PATCH http://localhost:8080/libros
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 2,
   "precio": 41
 }
 
@@ -72,7 +72,7 @@ PATCH http://localhost:8080/libros/disable
 Content-Type: application/json
 
 {
-  "id": 3
+  "id": 1
 }
 
 #################################################
@@ -92,3 +92,21 @@ Content-Type: application/json
 
 GET http://localhost:8080/libros
 Content-Type: application/json
+
+
+#################################################
+# GENERAR TRANSACCION
+#################################################
+POST http://localhost:8080/transaction
+Content-Type: application/json
+
+{
+  "idTrabajador": 1,
+  "idUsuario": 1,
+  "Fecha": "2024-06-01",
+  "semestre": "2024-1",
+  "precio_total": 18500,
+  "Copia_libroid": 1,
+  "esVenta": true,
+  "esPrestamo": false
+}

@@ -22,7 +22,7 @@ const getConnection = async () => {
 };
 export const executeQuery = async (query, params) => {
   try {
-    const rows = await pool.query(query, params);
+    const [rows] = await pool.query(query, params);
     return rows;
   } catch (error) {
     console.error("Error al ejecutar la consulta:", query, error);

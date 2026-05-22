@@ -8,6 +8,7 @@ export  async function addUser(data) {
     //Validamos si el usuario ya existe por rut
     const querySelect = `SELECT * FROM usuario WHERE rut = ?`;
     const resultSelect = await executeQuery(querySelect, [rut]);
+    console.log("resultSelect: ", resultSelect.length);
     if (resultSelect.length > 0) {
       throw new HandleError("El usuario ya existe en el sistema", 409);
     }
