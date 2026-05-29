@@ -79,7 +79,7 @@ export async function generateTransaction(data) {
 }
 async function existWorker(idTrabajador) {
   const query = `SELECT * FROM trabajador WHERE id = ?`;
-  const result= await executeQuery(query, [idTrabajador]);
+  const result = await executeQuery(query, [idTrabajador]);
   console.log("existWorker result: ", result);
   return result.length > 0;
 }
@@ -92,4 +92,33 @@ async function existBook(copiaLibroId) {
   const query = `SELECT * FROM copia_libro WHERE id = ? AND estado = 1`;
   const result = await executeQuery(query, [copiaLibroId]);
   return result.length > 0;
+}
+export async function getDetailsTransaction(data) {
+  const { id, date } = data;
+  
+  try {
+    //Validamos si el usuario existe
+    const querySelectUser = `SELECT * FROM usuario WHERE id = ?`;
+    const resultSelectUser = await executeQuery(querySelectUser, [id]);
+    if (resultSelectUser.length === 0) {
+      throw new HandleError(`El usuario con el id ${id}, No EXISTE`, 404);
+    }
+    //validamos si la transaccion existe para el usuario y la fecha solicitada
+    const querySelectTransaction = `SELECT * FROM transaccion WHERE Usuarioid = ? AND Fecha = ?`;
+    const resultSelectTransaction = await executeQuery(querySelectTransaction, [
+      id,
+      date,
+    ]);
+    if (resultSelectTransaction.length === 0) {
+      throw new HandleError(`El usuario No posee transacciones`,404)
+    }
+    //si existen transacciones, obtenemos los detalles de cada una
+    return resultSelectTransaction;
+    
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
 }

@@ -101,12 +101,23 @@ POST http://localhost:8080/transaction
 Content-Type: application/json
 
 {
-  "idTrabajador": 1,
+  "idTrabajador": 2,
   "idUsuario": 1,
   "Fecha": "2024-06-01",
-  "semestre": "2024-1",
+  "semestre": 1,
   "precio_total": 18500,
   "Copia_libroid": 1,
-  "esVenta": true,
-  "esPrestamo": false
+  "esVenta": 1,
+  "esPrestamo": 0
+}
+
+#################################################
+Obtener detalles de una transacción
+#################################################
+get http://localhost:8080/transaction/details
+Content-Type: application/json
+
+{
+  "id": 1,
+  "date": "2024-06-01"
 }

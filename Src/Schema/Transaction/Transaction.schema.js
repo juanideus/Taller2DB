@@ -1,18 +1,7 @@
 
 
 import {z} from "zod";
-/*
-id int AI PK 
-Trabajadorid int 
-Usuarioid int 
-Fecha date 
-semestre int 
-precio_total int 
-Copia_libroid int 
-es_venta tinyint(1) 
-es_prestamo tinyint(1
 
-*/
 const TransactionSchema = z.object({
     idTrabajador: z.number({
         required_error: "El ID del trabajador es requerido",
