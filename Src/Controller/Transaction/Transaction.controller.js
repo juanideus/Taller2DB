@@ -1,8 +1,8 @@
 import { validateTransactionParse } from "../../Schema/Transaction/Transaction.schema.js";
 import { validateDetailTransactionParse } from "../../Schema/Transaction/Detail.Transaction.schema.js";
 import { HandleError } from "../../Util/Error.js";
-import { getDetailsTransaction } from "../../Model/Transaction.js";
-import { generateTransaction } from "../../Model/Transaction.js";
+import { getDetailsTransaction } from "../../Model/Transaction/Transaction.js";
+import { generateTransaction } from "../../Model/Transaction/Transaction.js";
 export async function Transaction(req, res) {
   const validator = validateTransactionParse(req.body);
   if (!validator.success) {

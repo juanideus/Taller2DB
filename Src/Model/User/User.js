@@ -1,6 +1,6 @@
 import { de } from "zod/v4/locales";
-import { executeQuery } from "../Db/Db.js";
-import { HandleError } from "../Util/Error.js";
+import { executeQuery } from "../../Db/Db.js";
+import { HandleError } from "../../Util/Error.js";
 export  async function addUser(data) {
   const { rut, nombre, edad, direccion } = data;
 

@@ -1,5 +1,6 @@
-import { HandleError } from "../Util/Error.js";
-import { executeQuery } from "../Db/Db.js";
+import { HandleError } from "../../Util/Error.js";
+import {randomUUID} from "crypto";
+import { executeQuery } from "../../Db/Db.js";
 export async function generateTransaction(data) {
   const {
     idTrabajador,
@@ -11,6 +12,8 @@ export async function generateTransaction(data) {
     esVenta,
     esPrestamo,
   } = data;
+  const idTransaccion = randomUUID();
+  console.log (idTransaccion);
   console.log("generateTransaction data: ", data.idTrabajador);
   try {
     // 1. Validamos si el trabajador existe
@@ -51,9 +54,10 @@ export async function generateTransaction(data) {
         precio_total,
         Copia_libroid,
         es_venta,
-        es_prestamo
+        es_prestamo,
+        id_Transaccion
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     return await executeQuery(queryInsert, [
@@ -65,6 +69,7 @@ export async function generateTransaction(data) {
       Copia_libroid,
       esVenta,
       esPrestamo,
+      idTransaccion,
     ]);
   } catch (error) {
     if (error instanceof HandleError) {

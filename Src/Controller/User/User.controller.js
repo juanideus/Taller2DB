@@ -1,4 +1,4 @@
-import { addUser, disableUser } from "../../Model/User.js";
+import { addUser, disableUser } from "../../Model/User/User.js";
 import { validateUserParse } from "../../Schema/User/User.schema.js";
 import { validateUserDisableParse } from "../../Schema/User/UserDisable.schema.js";
 export async function addUsuario(req, res) {

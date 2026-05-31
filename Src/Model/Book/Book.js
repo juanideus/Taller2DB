@@ -1,7 +1,7 @@
 
-import { executeQuery } from "../Db/Db.js";
+import { executeQuery } from "../../Db/Db.js";
 
-import { HandleError } from "../Util/Error.js";
+import { HandleError } from "../../Util/Error.js";
 export async function addLibro(data) {
   const {
     nombre,

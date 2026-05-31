@@ -46,7 +46,7 @@ Content-Type: application/json
 {
   "nombre": "Juan Perez",
   "edad": 25,
-  "rut": "12345678-9",
+  "rut": "12345678-8",
   "direccion": "Av. Siempre Viva 123"
 }
 
@@ -101,7 +101,7 @@ POST http://localhost:8080/transaction
 Content-Type: application/json
 
 {
-  "idTrabajador": 2,
+  "idTrabajador": 1,
   "idUsuario": 1,
   "Fecha": "2024-06-01",
   "semestre": 1,
@@ -112,8 +112,8 @@ Content-Type: application/json
 }
 
 #################################################
-Obtener detalles de una transacción
-#################################################
+# Obtener detalles de una transacción
+##############################################
 get http://localhost:8080/transaction/details
 Content-Type: application/json
 
