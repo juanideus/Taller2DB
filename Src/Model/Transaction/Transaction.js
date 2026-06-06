@@ -1,86 +1,93 @@
 import { HandleError } from "../../Util/Error.js";
-import {randomUUID} from "crypto";
-import { executeQuery } from "../../Db/Db.js";
+import { randomUUID } from "crypto";
+import { executeQuery, pool } from "../../Db/Db.js";
 export async function generateTransaction(data) {
-  const {
-    idTrabajador,
-    idUsuario,
-    Fecha,
-    semestre,
-    precio_total,
-    Copia_libroid,
-    esVenta,
-    esPrestamo,
-  } = data;
-  const idTransaccion = randomUUID();
-  console.log (idTransaccion);
-  console.log("generateTransaction data: ", data.idTrabajador);
+  const { Trabajadorid, Usuarioid, Copia_libroid, es_venta, es_prestamo } =
+    data;
+
+  const date = new Date();
+  const semestre = Math.ceil((date.getMonth() + 1) / 6);
+  const issell = es_venta ? 1 : 0;
+  const isloan = es_prestamo ? 1 : 0;
+  // ← elimina el precio_total de aquí
+  let idTransaccion= null; // ← inicializa idTransaccion aquí
+  const ids = [];
+
   try {
-    // 1. Validamos si el trabajador existe
-    if (!(await existWorker(idTrabajador))) {
+    if (!(await existWorker(Trabajadorid))) {
       throw new HandleError("El trabajador no existe", 404);
     }
-
-    // 2. Validamos si el usuario existe
-    if (!(await existUser(idUsuario))) {
+    if (!(await existUser(Usuarioid))) {
       throw new HandleError("El usuario no existe", 404);
     }
-
-    // 3. Validamos que el libro exista y esté disponible
-    if (!(await existBook(Copia_libroid))) {
-      throw new HandleError("El libro no existe o no está disponible", 404);
+    for (const copiaId of Copia_libroid) {
+      if (!(await existBook(copiaId))) {
+        throw new HandleError(
+          `La copia ${copiaId} no existe o no está disponible`,
+          404,
+        );
+      }
     }
-
-    // 4. Validamos que sea préstamo o venta
-    if (esPrestamo && esVenta) {
+    if (es_prestamo && es_venta) {
       throw new HandleError(
         "La transacción no puede ser préstamo y venta al mismo tiempo",
         400,
       );
     }
-
-    if (!esPrestamo && !esVenta) {
+    if (!es_prestamo && !es_venta) {
       throw new HandleError("La transacción debe ser préstamo o venta", 400);
     }
 
-    // 5. Insertamos transacción
-    const queryInsert = `
-      INSERT INTO transaccion
-      (
-        Trabajadorid,
-        Usuarioid,
-        Fecha,
-        semestre,
-        precio_total,
-        Copia_libroid,
-        es_venta,
-        es_prestamo,
-        id_Transaccion
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
 
-    return await executeQuery(queryInsert, [
-      idTrabajador,
-      idUsuario,
-      Fecha,
-      semestre,
-      precio_total,
-      Copia_libroid,
-      esVenta,
-      esPrestamo,
-      idTransaccion,
-    ]);
-  } catch (error) {
-    if (error instanceof HandleError) {
+      for (const copiaId of Copia_libroid) {
+        const precio_total = issell ? await getBookPrice(copiaId) : 0; // ← solo aquí
+        idTransaccion = randomUUID();
+        await connection.query(
+          `INSERT INTO transaccion (Trabajadorid, Usuarioid, Fecha, semestre, es_venta, es_prestamo, precio_total, Copia_libroid, id_Transaccion) 
+           VALUES (?, ?, NOW(), ?, ?, ?, ?, ?, ?)`,
+          [
+            Trabajadorid,
+            Usuarioid,
+            semestre,
+            issell,
+            isloan,
+            precio_total,
+            copiaId,
+            idTransaccion,
+          ],
+        );
+        ids.push(idTransaccion);
+      }
+
+
+      await connection.commit();
+      connection.release();
+      return { idsTransaccion: ids };
+    } catch (error) {
+      await connection.rollback();
+      connection.release();
       throw error;
     }
-
+  } catch (error) {
+    if (error instanceof HandleError) throw error;
     throw new HandleError(
       "Error al generar la transacción: " + error.message,
       500,
     );
   }
+}
+async function getBookPrice(copiaLibroId) {
+  const query = `SELECT l.precio FROM copia_libro cl, libro l WHERE cl.Libroid = l.id AND cl.id = ?`;
+  const result = await executeQuery(query, [copiaLibroId]);
+
+  if (result.length === 0) {
+    throw new HandleError("No se encontró el precio del libro", 404);
+  }
+
+  return result[0].precio;
 }
 async function existWorker(idTrabajador) {
   const query = `SELECT * FROM trabajador WHERE id = ?`;
@@ -100,7 +107,7 @@ async function existBook(copiaLibroId) {
 }
 export async function getDetailsTransaction(data) {
   const { id, date } = data;
-  
+
   try {
     //Validamos si el usuario existe
     const querySelectUser = `SELECT * FROM usuario WHERE id = ?`;
@@ -115,11 +122,10 @@ export async function getDetailsTransaction(data) {
       date,
     ]);
     if (resultSelectTransaction.length === 0) {
-      throw new HandleError(`El usuario No posee transacciones`,404)
+      throw new HandleError(`El usuario No posee transacciones`, 404);
     }
     //si existen transacciones, obtenemos los detalles de cada una
     return resultSelectTransaction;
-    
   } catch (error) {
     if (error instanceof HandleError) {
       throw error;

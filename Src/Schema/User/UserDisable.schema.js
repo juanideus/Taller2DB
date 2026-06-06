@@ -1,10 +1,7 @@
 import {z} from "zod";
 
 export const UserDisableSchema = z.object({
-    rut: z.string({
-        required_error: "El RUT es requerido",
-        invalid_type_error: "El RUT debe ser un texto",
-    }).min(8, "El RUT no puede estar vacío"),
+  id: z.string().nonempty("El ID del usuario es requerido"),
 }
 );
 export const validateUserDisable = (data) => {

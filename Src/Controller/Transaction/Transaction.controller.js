@@ -4,16 +4,25 @@ import { HandleError } from "../../Util/Error.js";
 import { getDetailsTransaction } from "../../Model/Transaction/Transaction.js";
 import { generateTransaction } from "../../Model/Transaction/Transaction.js";
 export async function Transaction(req, res) {
+  
   const validator = validateTransactionParse(req.body);
+  console.log("validator: ", validator.data);
   if (!validator.success) {
     return res.status(400).json({
       message: validator.error.errors.map((e) => e.message).join(", "),
     });
   }
-  try {
+  try { 
     const result = await generateTransaction(validator.data);
     if (result) {
-      res.status(201).json({ message: "Transaccion generada exitosamente" });
+      res.status(201).json({ 
+        status: 201,
+        message: "Transaccion generada exitosamente",
+        data: {
+          idTransaccion: result.idsTransaccion, 
+
+        } 
+      });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({

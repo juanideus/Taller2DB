@@ -6,14 +6,6 @@ export const UserSchema = z.object({
       invalid_type_error: "El nombre debe ser un texto",
     })
     .min(1, "El nombre no puede estar vacío"),
-
-  edad: z
-    .number({
-      required_error: "La edad es requerida",
-      invalid_type_error: "La edad debe ser un número",
-    })
-    .int("La edad debe ser un número entero")
-    .positive("La edad debe ser un número positivo"),
   rut: z
     .string({
       required_error: "El RUT es requerido",

@@ -4,7 +4,10 @@ import libroRouter from "./Router/Book.router.js";
 import userRouter from "./Router/User.router.js";
 import transactionRouter from "./Router/Transaction.router.js";
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // ← origen exacto del frontend
+  credentials: true,               // ← permite enviar cookies
+}));
 app.use(express.json());
 // Rutas para libros 
 app.use("/libros", libroRouter);

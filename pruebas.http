@@ -11,12 +11,12 @@ POST http://localhost:8080/libros
 Content-Type: application/json
 
 {
-  "nombre": "Cien años de soledads",
-  "genero": 1,
-  "autor": "Gabriel Garcías Márquez",
-  "fechaRecepcion": "2024-06-01",
-  "cantCopias": 5,
-  "edadSugerida": 14,
+  "Nombre": "Cien años de soledads",
+  "Genero": "ayuwoki",
+  "Autor": "Gabriel Garcías Márquez",
+  "fecha_recepcion": "2024-06-01",
+  "cantidad_copias": 5,
+  "edad_sugerida": 14,
   "editorial": "Sudamericana",
   "precio": 18500,
   "estado": 1
@@ -32,7 +32,7 @@ Content-Type: application/json
 
 {
   "id": 1,
-  "codBarra": "12213123"
+  "codBarra": "12212212122"
 }
 
 
@@ -45,7 +45,6 @@ Content-Type: application/json
 
 {
   "nombre": "Juan Perez",
-  "edad": 25,
   "rut": "12345678-8",
   "direccion": "Av. Siempre Viva 123"
 }
@@ -55,11 +54,10 @@ Content-Type: application/json
 # ACTUALIZAR PRECIO DE UN LIBRO
 #################################################
 
-PATCH http://localhost:8080/libros
+PATCH http://localhost:8080/libros/1
 Content-Type: application/json
 
 {
-  "id": 2,
   "precio": 41
 }
 
@@ -68,22 +66,16 @@ Content-Type: application/json
 # DESHABILITAR COPIA DE UN LIBRO
 #################################################
 
-PATCH http://localhost:8080/libros/disable
+PATCH http://localhost:8080/libros/disable/1
 Content-Type: application/json
 
-{
-  "id": 1
-}
+
 
 #################################################
 # DESHABILITAR USUARIO
 #################################################
-PATCH http://localhost:8080/users/disable
+PATCH http://localhost:8080/users/disable/1
 Content-Type: application/json
-
-{
-  "rut": "12345678-9"
-}
 
 
 #################################################
@@ -101,16 +93,12 @@ POST http://localhost:8080/transaction
 Content-Type: application/json
 
 {
-  "idTrabajador": 1,
-  "idUsuario": 1,
-  "Fecha": "2024-06-01",
-  "semestre": 1,
-  "precio_total": 18500,
-  "Copia_libroid": 1,
-  "esVenta": 1,
-  "esPrestamo": 0
+  "Trabajadorid": 1,
+  "Usuarioid": 1,
+  "Copia_libroid": 4,
+  "es_venta": true,
+  "es_prestamo": false
 }
-
 #################################################
 # Obtener detalles de una transacción
 ##############################################
@@ -120,4 +108,25 @@ Content-Type: application/json
 {
   "id": 1,
   "date": "2024-06-01"
+}
+#################################################
+# LOGIN DE USUARIO
+#################################################
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "email": "juan@correo.com",
+  "password": "123456"  
+}
+###############################################
+# REGISTRAR USUARIO
+POST http://localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "nombre": "Juan Perez",
+  "rut": "123456728-8",
+  "direccion": "Av. Siempre Viva 123",
+  "estado": 1
 }

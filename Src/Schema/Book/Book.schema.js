@@ -1,29 +1,26 @@
 import { z } from "zod";
 
 export const BookSchema = z.object({
-  nombre: z
+  Nombre: z
     .string({
       required_error: "El nombre del libro es requerido",
       invalid_type_error: "El nombre debe ser un texto",
     })
     .min(1, "El nombre del libro no puede estar vacío"),
 
-  genero: z
-    .number({
-      required_error: "El género es requerido",
-      invalid_type_error: "El género debe ser un número entero",
-    })
-    .int("El género debe ser un número entero")
-    .positive("El género debe ser un número positivo"),
+  Genero: z.string({
+    required_error: "El género es requerido",
+    invalid_type_error: "El género debe ser un texto",
+  }).min(6,"El largo del genero es muy corto"),
 
-  autor: z
+  Autor: z
     .string({
       required_error: "El autor es requerido",
       invalid_type_error: "El autor debe ser un texto",
     })
     .min(1, "El autor del libro no puede estar vacío"),
 
-  fechaRecepcion: z
+  fecha_recepcion: z
     .string({
       required_error: "La fecha de recepción es requerida",
       invalid_type_error:
@@ -31,7 +28,7 @@ export const BookSchema = z.object({
     })
     .min(1, "La fecha de recepción es requerida"),
 
-  cantCopias: z
+  cantidad_copias: z
     .number({
       required_error: "La cantidad de copias es requerida",
       invalid_type_error: "La cantidad de copias debe ser un número",
@@ -39,7 +36,7 @@ export const BookSchema = z.object({
     .int("La cantidad de copias debe ser un número entero")
     .positive("La cantidad de copias debe ser un número positivo"),
 
-  edadSugerida: z
+  edad_sugerida: z
     .number({
       required_error: "La edad sugerida es requerida",
       invalid_type_error: "La edad sugerida debe ser un número",

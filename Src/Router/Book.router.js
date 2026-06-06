@@ -5,8 +5,8 @@ const router = Router();
 
 router.post('/', addLibros)
 router.post('/copy', generateCopy)
-router.patch('/', patchPriceBooks)
-router.patch('/disable',disableBook )
+router.patch('/:id', patchPriceBooks)
+router.patch('/disable/:id',disableBook )
 router.get('/', getAllBooks)
 
 export default router;

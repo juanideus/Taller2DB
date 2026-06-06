@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 const result = dotenv.config();
 console.log(result);
 
-const pool = mysql.createPool({
+export const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -29,3 +29,4 @@ export const executeQuery = async (query, params) => {
     throw error;
   }
 };
+

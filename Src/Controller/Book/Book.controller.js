@@ -8,6 +8,7 @@ import { validateCopyBookDisableParse } from "../../Schema/Book/copyBookDisable.
 export async function addLibros(req, res) {
   try {
     const validator = validateBookParse(req.body);
+    console.log("Validator result:", validator);
     if (!validator.success) {
       return res.status(400).json({
         message: validator.error.errors.map((e) => e.message).join(", "),
@@ -15,7 +16,9 @@ export async function addLibros(req, res) {
     }
     const result = await addLibro(validator.data);
     if (result) {
-      res.status(201).json({ message: "Libro agregado exitosamente" });
+      res.status(201).json({
+        status: 201,
+        message: "Libro agregado exitosamente" });
     }
   } catch (error) {
     console.error(error.statusCode);
@@ -26,9 +29,9 @@ export async function addLibros(req, res) {
 }
 
 export async function patchPriceBooks(req, res) {
-  console.log("Patch executed with body:", req.body);
+  const data = { id: req.params.id, ...req.body };
   try {
-    const validator = validateBookPatchPriceParse(req.body);
+    const validator = validateBookPatchPriceParse(data);
     if (!validator.success) {
       return res.status(400).json({
         message: validator.error.errors.map((e) => e.message).join(", "),
@@ -37,7 +40,9 @@ export async function patchPriceBooks(req, res) {
 
     const result = await patchPriceBook(validator.data);
     if (result) {
-      res.status(200).json({ message: "Precio actualizado exitosamente" });
+      res.status(201).json({
+        status: 201,
+        message: "Precio actualizado exitosamente" });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -58,7 +63,9 @@ export async function generateCopy(req, res) {
   try {
     const result = await postGenerateCopy(validator.data);
     if (result) {
-      res.status(201).json({ message: "Copia generada exitosamente" });
+      res.status(201).json({ 
+        status: 201,
+        message: "Copia generada exitosamente" });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -68,7 +75,7 @@ export async function generateCopy(req, res) {
 }
 export async function disableBook(req, res) {
   try {
-    const validator = validateCopyBookDisableParse(req.body);
+    const validator = validateCopyBookDisableParse(req.params);
     if (!validator.success) {
       return res.status(400).json({
         message: validator.error.errors.map((e) => e.message).join(", "),
@@ -76,7 +83,9 @@ export async function disableBook(req, res) {
     }
     const result = await disableCopyBook(validator.data);
     if (result) {
-      res.status(200).json({ message: "Copia deshabilitada exitosamente" });
+      res.status(200).json({
+        status: 200,
+        message: "Copia deshabilitada exitosamente" });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -90,6 +99,7 @@ export async function getAllBooks(req, res) {
     const result = await showBook();
     if (result) {
       return res.status(200).json({
+        status: 200,
         message: "Libros encontrados exitosamente",
         data: result,
       });

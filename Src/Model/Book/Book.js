@@ -4,12 +4,12 @@ import { executeQuery } from "../../Db/Db.js";
 import { HandleError } from "../../Util/Error.js";
 export async function addLibro(data) {
   const {
-    nombre,
-    genero,
-    autor,
-    fechaRecepcion,
-    cantCopias,
-    edadSugerida,
+    Nombre,
+    Genero,
+    Autor,
+    fecha_recepcion,
+    cantidad_copias,
+    edad_sugerida,
     editorial,
     precio,
     estado,
@@ -18,7 +18,7 @@ export async function addLibro(data) {
   try {
     //validamos si el libro ya existe por nombre y autor
     const querySelect = `SELECT * FROM libro WHERE nombre = ? AND autor = ?`;
-    const resultSelect = await executeQuery(querySelect, [nombre, autor]);
+    const resultSelect = await executeQuery(querySelect, [Nombre, Autor]);
 
     console.log("resultSelect: ", resultSelect.length);
 
@@ -40,12 +40,12 @@ export async function addLibro(data) {
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
     return await executeQuery(query, [
-      nombre,
-      genero,
-      autor,
-      fechaRecepcion,
-      cantCopias,
-      edadSugerida,
+      Nombre,
+      Genero,
+      Autor,
+      fecha_recepcion,
+      cantidad_copias,
+      edad_sugerida,
       editorial,
       precio,
       estado,
@@ -122,28 +122,24 @@ export async function postGenerateCopy(data) {
 export async function disableCopyBook(data) {
   const { id } = data;
   try {
-    //validamos si la copia ya esta deshabilitada
-    const querySelectDisable = `SELECT * FROM copia_libro WHERE id = ? AND estado = 0`;
-    const resultSelectDisable = await executeQuery(querySelectDisable, [id]);
-
-    if (resultSelectDisable.length > 0) {
-      throw new HandleError("La copia del libro ya esta deshabilitada", 409);
-    }
-
-    const querySelect = `SELECT * FROM copia_libro WHERE Libroid = ?`;
+    // Validamos si la copia existe
+    const querySelect = `SELECT * FROM copia_libro WHERE id = ?`;
     const resultSelect = await executeQuery(querySelect, [id]);
 
     if (resultSelect.length === 0) {
-      throw new HandleError("El copia del libro no existe", 404);
+      throw new HandleError("La copia del libro no existe", 404);
+    }
+
+    // Validamos si ya está deshabilitada
+    if (resultSelect[0].estado === 0) {
+      throw new HandleError("La copia del libro ya está deshabilitada", 409);
     }
 
     const queryUpdate = `UPDATE copia_libro SET estado = 0 WHERE id = ?`;
     return await executeQuery(queryUpdate, [id]);
-    
+
   } catch (error) {
-    if (error instanceof HandleError) {
-      throw error;
-    }
+    if (error instanceof HandleError) throw error;
     throw new HandleError("Error interno del servidor", 500);
   }
 }
