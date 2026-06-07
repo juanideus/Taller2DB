@@ -1,6 +1,6 @@
 import e from "express";
 import { executeQuery } from "../../Db/Db.js";
-import {addLibro,patchPriceBook,postGenerateCopy,disableCopyBook,showBook,} from "../../Model/Book/Book.js";
+import {addLibro,patchPriceBook,postGenerateCopy,disableCopyBook,showBook,updateStockbyid} from "../../Model/Book/Book.js";
 import { validateBookParse } from "../../Schema/Book/Book.schema.js";
 import { validateCopyBookParse } from "../../Schema/Book/copyBook.schema.js";
 import { validateBookPatchPriceParse } from "../../Schema/Book/bookPatch.schema.js";
@@ -107,6 +107,22 @@ export async function getAllBooks(req, res) {
   } catch (error) {
     res.status(error.statusCode || 500).json({
       message: error.message || "Error al encontrar los libro",
+    });
+  }
+}
+export async function updateStock(req,res){
+  const id = req.params.id
+  try {
+    const result = await updateStockbyid({id});
+    if(result){
+      return res.status(200).json({
+        status: 200,
+        message: "Stock actualizado exitosamente",
+      });
+    }
+  }catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al actualizar el stock del libro",
     });
   }
 }

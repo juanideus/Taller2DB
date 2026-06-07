@@ -5,6 +5,9 @@ import {
   registerUser,
   showUsers,
   registerWorker,
+  showWorkersAndUser,
+  getUsersAndWorkersLoan,
+  getAllLibrains
 } from "../../Model/User/User.js";
 import { validateUserParse } from "../../Schema/User/User.schema.js";
 import { validateUserDisableParse } from "../../Schema/User/UserDisable.schema.js";
@@ -135,7 +138,7 @@ export async function showAllUsers(req, res) {
 export async function workerRegister(req, res) {
   try {
     const validator = validateWorkerParse(req.body);
-    
+
     if (!validator.success) {
       return res.status(400).json({
         message: validator.error.errors.map((e) => e.message).join(", "),
@@ -157,6 +160,73 @@ export async function workerRegister(req, res) {
     console.error("Error en workerRegister: ", error);
     res.status(error.statusCode || 500).json({
       message: error.message || "Error al registrar el trabajador",
+    });
+  }
+}
+export async function getUsersAndWorkers(req, res) {
+  try {
+    const users = await showWorkersAndUser();
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "No se encontraron usuarios ni trabajadores",
+        data: [],
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      message: "Usuarios y trabajadores obtenidos exitosamente",
+      data: {
+        usuarios: users.usuarios,
+        bibliotecarias: users.bibliotecaria,
+      },
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al obtener los usuarios y trabajadores",
+    });
+  }
+}
+export async function getUsersLoan(req, res) {
+  try {
+    const users = await getUsersAndWorkersLoan();
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "No se encontraron usuarios con almenos 1 prestamo",
+        data: [],
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      message: "Usuarios con prestamos obtenidos exitosamente",
+      data: users,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al obtener los usuarios con prestamos",
+    });
+  }
+}
+export async function getlibrains(req, res) {
+  try {
+      
+    const users = await getAllLibrains();
+    if (users.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: "No se encontraron bibliotecarios",
+        data: [],
+      });
+    }
+    return res.status(200).json({
+      status: 200,
+      message: "Bibliotecarios obtenidos exitosamente",
+      data: users,
+    });
+  }catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al obtener los bibliotecarios",
     });
   }
 }

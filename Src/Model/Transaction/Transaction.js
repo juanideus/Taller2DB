@@ -10,7 +10,7 @@ export async function generateTransaction(data) {
   const issell = es_venta ? 1 : 0;
   const isloan = es_prestamo ? 1 : 0;
   // ← elimina el precio_total de aquí
-  let idTransaccion= null; // ← inicializa idTransaccion aquí
+  let idTransaccion = null; // ← inicializa idTransaccion aquí
   const ids = [];
 
   try {
@@ -61,7 +61,6 @@ export async function generateTransaction(data) {
         );
         ids.push(idTransaccion);
       }
-
 
       await connection.commit();
       connection.release();
@@ -126,6 +125,34 @@ export async function getDetailsTransaction(data) {
     }
     //si existen transacciones, obtenemos los detalles de cada una
     return resultSelectTransaction;
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
+}
+//Los 10 libros menos prestados de la categoría Comedia durante el segundo semestre del
+//año 2025.
+export async function showLessLoanComedy() {
+  try {
+    const querySearch = `SELECT l.Nombre FROM libro l, transaccion t, copia_libro cl 
+WHERE l.Genero = 'Comedia' 
+  AND t.es_prestamo = 1
+  AND t.Copia_libroid = cl.id 
+  AND cl.Libroid = l.id 
+  AND t.Fecha >= '2025-07-01' 
+  AND t.Fecha <= '2025-12-31' 
+GROUP BY l.id 
+ORDER BY COUNT(t.id) ASC 
+LIMIT 10;`;
+    
+    const result = await executeQuery(querySearch);
+    console.log(result);
+    if (result.length === 0) {
+      throw new HandleError("No hay libros de comedia prestados", 404);
+    }
+    return result;
   } catch (error) {
     if (error instanceof HandleError) {
       throw error;

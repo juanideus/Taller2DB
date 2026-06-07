@@ -120,7 +120,7 @@ export async function showUsers() {
 }
 
 export async function registerWorker(data) {
-  const { nombre, rut, correo, contrasenia, sueldo, bono, Rolid } = data; 
+  const { nombre, rut, correo, contrasenia, sueldo, bono, Rolid } = data;
 
   try {
     const querySelect = `SELECT * FROM trabajador WHERE rut = ?`;
@@ -137,11 +137,11 @@ export async function registerWorker(data) {
       bono,
       contrasenia,
       correo,
-      1, 
+      1,
       nombre,
       rut,
       sueldo,
-      Rolid, 
+      Rolid,
     ]);
     return {
       id: resultSelect.insertId,
@@ -151,11 +151,55 @@ export async function registerWorker(data) {
       sueldo: sueldo,
       bono: bono,
       Rolid: Rolid,
-    }
+    };
   } catch (error) {
     if (error instanceof HandleError) throw error;
     throw new HandleError(
       "Error al registrar el trabajador: " + error.message,
+      500,
+    );
+  }
+}
+export async function showWorkersAndUser() {
+  try {
+    //recuperamos los usuarios normales
+    const query = "SELECT * FROM usuario where estado = 1";
+    const result = await executeQuery(query);
+    //recuperamos los trabajadores = bibliotecarios
+    const query2 = "SELECT * FROM trabajador where estado = 1 and rolid = 2";
+    const result2 = await executeQuery(query2);
+
+    return {
+      usuarios: result,
+      bibliotecaria: result2,
+    };
+  } catch (error) {
+    throw new HandleError(
+      "Error al obtener los usuarios y trabajadores: " + error.message,
+      500,
+    );
+  }
+}
+export async function getUsersAndWorkersLoan() {
+  try {
+    const query = `SELECT * FROM usuario u,transaccion t WHERE es_prestamo = 1 and u.id = t.usuarioid`;
+    const result = await executeQuery(query);
+    return result;
+  } catch (error) {
+    throw new HandleError(
+      "Error al obtener los usuarios con prestamos: " + error.message,
+      500,
+    );
+  }
+}
+export async function getAllLibrains() {
+  try {
+    const query = `SELECT * FROM trabajador WHERE rolid = 2`;
+    const result = await executeQuery(query);
+    return result;
+  } catch (error) {
+    throw new HandleError(
+      "Error al obtener los bibliotecarios: " + error.message,
       500,
     );
   }
