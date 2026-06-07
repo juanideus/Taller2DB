@@ -4,6 +4,7 @@ import { HandleError } from "../../Util/Error.js";
 import { getDetailsTransaction } from "../../Model/Transaction/Transaction.js";
 import { generateTransaction } from "../../Model/Transaction/Transaction.js";
 import { showLessLoanComedy } from "../../Model/Transaction/Transaction.js";
+import { showMostSellFiction } from "../../Model/Transaction/Transaction.js";
 import {getSeelBooksInTheActualYear} from "../../Model/Transaction/Transaction.js";
 export async function Transaction(req, res) {
   const validator = validateTransactionParse(req.body);
@@ -94,4 +95,21 @@ export async function sellInYear(req,res){
     });
   }
 
+}
+
+export async function showFiction(req,res) {
+  try {
+    const result = await showMostSellFiction();
+
+    res.status(200).json({
+      status: 200,
+      message: "Ventas Ficción obtenidas exitosamente",
+      data: result,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message:
+        error.message || "Error al obtener los detalles de la transaccion",
+    });
+  }
 }

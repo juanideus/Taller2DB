@@ -182,7 +182,7 @@ export async function showWorkersAndUser() {
 }
 export async function getUsersAndWorkersLoan() {
   try {
-    const query = `SELECT * FROM usuario u,transaccion t WHERE es_prestamo = 1 and u.id = t.usuarioid`;
+    const query = `SELECT * FROM usuario u,transaccion t WHERE u.id = t.usuarioid`;
     const result = await executeQuery(query);
     return result;
   } catch (error) {
