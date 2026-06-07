@@ -1,6 +1,14 @@
 import e from "express";
 import { executeQuery } from "../../Db/Db.js";
-import {addLibro,patchPriceBook,postGenerateCopy,disableCopyBook,showBook,updateStockbyid} from "../../Model/Book/Book.js";
+import {
+  addLibro,
+  patchPriceBook,
+  postGenerateCopy,
+  disableCopyBook,
+  showBook,
+  updateStockbyid,
+  resentBooksbyweek,
+} from "../../Model/Book/Book.js";
 import { validateBookParse } from "../../Schema/Book/Book.schema.js";
 import { validateCopyBookParse } from "../../Schema/Book/copyBook.schema.js";
 import { validateBookPatchPriceParse } from "../../Schema/Book/bookPatch.schema.js";
@@ -18,7 +26,8 @@ export async function addLibros(req, res) {
     if (result) {
       res.status(201).json({
         status: 201,
-        message: "Libro agregado exitosamente" });
+        message: "Libro agregado exitosamente",
+      });
     }
   } catch (error) {
     console.error(error.statusCode);
@@ -42,7 +51,8 @@ export async function patchPriceBooks(req, res) {
     if (result) {
       res.status(201).json({
         status: 201,
-        message: "Precio actualizado exitosamente" });
+        message: "Precio actualizado exitosamente",
+      });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -63,9 +73,10 @@ export async function generateCopy(req, res) {
   try {
     const result = await postGenerateCopy(validator.data);
     if (result) {
-      res.status(201).json({ 
+      res.status(201).json({
         status: 201,
-        message: "Copia generada exitosamente" });
+        message: "Copia generada exitosamente",
+      });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -85,7 +96,8 @@ export async function disableBook(req, res) {
     if (result) {
       res.status(200).json({
         status: 200,
-        message: "Copia deshabilitada exitosamente" });
+        message: "Copia deshabilitada exitosamente",
+      });
     }
   } catch (error) {
     res.status(error.statusCode || 500).json({
@@ -110,19 +122,35 @@ export async function getAllBooks(req, res) {
     });
   }
 }
-export async function updateStock(req,res){
-  const id = req.params.id
+export async function updateStock(req, res) {
+  const id = req.params.id;
   try {
-    const result = await updateStockbyid({id});
-    if(result){
+    const result = await updateStockbyid({ id });
+    if (result) {
       return res.status(200).json({
         status: 200,
         message: "Stock actualizado exitosamente",
       });
     }
-  }catch (error) {
+  } catch (error) {
     res.status(error.statusCode || 500).json({
       message: error.message || "Error al actualizar el stock del libro",
+    });
+  }
+}
+export async function resentBooks(req, res) {
+  try {
+    const result = await resentBooksbyweek();
+    if (result) {
+      return res.status(200).json({
+        status: 200,
+        message: "Libros recientes encontrados exitosamente",
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      message: error.message || "Error al encontrar los libros recientes",
     });
   }
 }

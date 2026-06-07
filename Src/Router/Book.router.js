@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {addLibros,patchPriceBooks,generateCopy, disableBook, getAllBooks,updateStock} from "../Controller/Book/Book.controller.js";
+import {addLibros,patchPriceBooks,generateCopy, disableBook, getAllBooks,updateStock,resentBooks} from "../Controller/Book/Book.controller.js";
 
 const router = Router();
 
@@ -9,5 +9,6 @@ router.patch('/:id', patchPriceBooks)
 router.patch('/disable/:id',disableBook )
 router.get('/', getAllBooks)
 router.patch('/updateStock/:id',updateStock)
+router.get('/recent',resentBooks)
 
 export default router;

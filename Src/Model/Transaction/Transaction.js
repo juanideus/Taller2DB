@@ -41,7 +41,12 @@ export async function generateTransaction(data) {
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
-
+      //preguntamos esi el estado del usuario es 1, si es 0, no puede realizar la transaccion
+      const queryUser = `SELECT estado FROM usuario WHERE id = ?`;
+      const resultUser = await connection.query(queryUser, [Usuarioid]);
+      if (resultUser[0][0].estado === 0) {
+        throw new HandleError("El usuario está deshabilitado", 400);
+      }
       for (const copiaId of Copia_libroid) {
         const precio_total = issell ? await getBookPrice(copiaId) : 0; // ← solo aquí
         idTransaccion = randomUUID();
@@ -146,11 +151,33 @@ WHERE l.Genero = 'Comedia'
 GROUP BY l.id 
 ORDER BY COUNT(t.id) ASC 
 LIMIT 10;`;
-    
+
     const result = await executeQuery(querySearch);
     console.log(result);
     if (result.length === 0) {
       throw new HandleError("No hay libros de comedia prestados", 404);
+    }
+    return result;
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
+}
+export async function getSeelBooksInTheActualYear() {
+  try {
+    const querySearch = `SELECT l.Nombre
+    FROM libro l, copia_libro cl, transaccion t
+    WHERE cl.Libroid= l.id
+    AND t.Copia_libroid = cl.id
+    AND t.es_venta = 1
+    AND YEAR(t.fecha) = YEAR(CURDATE())
+    GROUP BY l.Nombre;`;
+
+    const result = await executeQuery(querySearch);
+    if (result.length === 0) {
+      throw new HandleError("No se han vendido libros en el año actual", 404);
     }
     return result;
   } catch (error) {

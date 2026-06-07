@@ -4,6 +4,7 @@ import { HandleError } from "../../Util/Error.js";
 import { getDetailsTransaction } from "../../Model/Transaction/Transaction.js";
 import { generateTransaction } from "../../Model/Transaction/Transaction.js";
 import { showLessLoanComedy } from "../../Model/Transaction/Transaction.js";
+import {getSeelBooksInTheActualYear} from "../../Model/Transaction/Transaction.js";
 export async function Transaction(req, res) {
   const validator = validateTransactionParse(req.body);
   console.log("validator: ", validator.data);
@@ -64,16 +65,33 @@ export async function getlibrains(req, res) {
 export async function showComedy(req, res) {
   try {
     const result = await showLessLoanComedy();
-   
+
     res.status(200).json({
       status: 200,
       message: "Comedias obtenidas exitosamente",
       data: result,
-    }
-    );
-}catch (error) {
+    });
+  } catch (error) {
     res.status(error.statusCode || 500).json({
       message:
         error.message || "Error al obtener los detalles de la transaccion",
     });
-  }}
+  }
+}
+export async function sellInYear(req,res){
+  try{
+    const result = await getSeelBooksInTheActualYear();
+    return res.status(200).json({
+        status: 200,
+        message : "Libros vendidos en el año obtenidos exitosamente",
+        data: result
+    })
+    
+  }catch(error){
+      res.status(error.statusCode || 500).json({
+      message:
+        error.message || "Error al obtener los detalles de la transaccion",
+    });
+  }
+
+}

@@ -179,9 +179,27 @@ export async function updateStockbyid(data) {
       if (resultUpdate.affectedRows === 0) {
         throw new HandleError("No se pudo actualizar el stock del libro", 500);
       }
-      console.log (resultUpdate);
+      console.log(resultUpdate);
       return resultUpdate;
     }
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
+}
+export async function resentBooksbyweek() {
+  try {
+    const querySearch = `SELECT l.Nombre
+    FROM libro l, copia_libro cl, transaccion t
+    WHERE cl.Libroid = l.id
+    AND t.Copia_libroid = cl.id
+    AND WEEK(t.fecha) = WEEK(CURDATE())
+    AND YEAR(t.fecha) = YEAR(CURDATE())
+    GROUP BY l.Nombre;`;
+    const resultQuery = await executeQuery(querySearch);
+    return resultQuery;
   } catch (error) {
     if (error instanceof HandleError) {
       throw error;
