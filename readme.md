@@ -1,47 +1,80 @@
 # 📚 Taller 2 - Sistema de Biblioteca
 
-## ✅ Estado de Requerimientos
+## Descripción
 
-| Nº | Requerimiento                                                                                  | Estado |
-| -- | ---------------------------------------------------------------------------------------------- | ------ |
-| 1  | Registrar un nuevo libro                                                                       | ✅      |
-| 2  | Registrar un nuevo usuario                                                                     | ✅      |
-| 3  | Eliminar (deshabilitar) una copia de libro                                                     | ✅      |
-| 4  | Actualizar el precio de un libro (el precio debe ser mayor al actual)                          | ✅      |
-| 5  | Eliminar (desactivar) un usuario                                                               | ✅      |
-| 6  | Registrar un nuevo préstamo/venta                                                              | ✅      |
-| 7  | Consultar el detalle del préstamo/venta de un usuario específico para una fecha determinada    | ✅      |
-| 8  | Listar usuarios y bibliotecarias                                                               | ⬜      |
-| 9  | Listar usuarios con al menos un préstamo/venta                                                 | ⬜      |
-| 10 | Listar todos los clientes                                                                      | ⬜      |
-| 11 | Listar libros disponibles                                                                      | ⬜      |
-| 12 | Listar libros a los que se les realizó un préstamo/venta recientemente (semana actual)         | ⬜      |
-| 13 | Incrementar el stock de un libro (Aumentar una copia)                                          | ⬜      |
-| 14 | Cantidad de libros vendidos durante el año actual                                              | ⬜      |
-| 15 | Top 10 libros más vendidos del género Ficción durante el primer semestre del año 2026          | ⬜      |
-| 16 | Los 10 libros menos prestados de la categoría Comedia durante el segundo semestre del año 2025 | ⬜      |
-| 17 | Iniciar sesión                                                                                 | ⬜      |
-| 18 | Registrar a un usuario                                                                         | ⬜      |
+Proyecto de backend para la gestión de una biblioteca: manejo de libros, usuarios y transacciones (préstamos/ventas). Implementado con Node.js, Express y MySQL; incluye validación con Zod.
 
----
+## Estructura principal
 
-## 🚀 Tecnologías Utilizadas
+- `Src/Router` : defines rutas base: `/libros`, `/users`, `/transaction`.
+- `Src/Controller` : lógica de controladores por entidad (`Book`, `User`, `Transaction`).
+- `Src/Model` : modelos de datos (representaciones JS).
+- `Src/Db/Db.js` : configuración del pool de MySQL (usa variables de entorno).
+- `Src/Schema` : esquemas de validación con Zod.
 
-* Node.js
-* Express.js
-* MySQL
-* Zod
-* JavaScript ESModules
+## Endpoints principales
 
----
+Base URL: http://localhost:8080
 
-## 📌 Estado Actual
+- Libros (`/libros`)
+	- `POST /libros` : Crear libro
+	- `POST /libros/copy` : Generar copia de libro
+	- `PATCH /libros/:id` : Actualizar precio
+	- `PATCH /libros/disable/:id` : Deshabilitar copia
+	- `GET /libros` : Listar libros
+	- `PATCH /libros/updateStock/:id` : Actualizar stock
+	- `GET /libros/recent` : Libros recientes
 
-Actualmente se encuentran implementadas todas las operaciones CRUD principales relacionadas con:
+- Usuarios (`/users`)
+	- `POST /users` : Crear usuario
+	- `POST /users/register` : Registrar usuario (registro alternativo)
+	- `POST /users/trabajador/registrarTrabajador` : Registrar trabajador
+	- `PATCH /users/disable/:id` : Deshabilitar usuario
+	- `POST /users/login` : Login
+	- `GET /users` : Listar usuarios
+	- `GET /users/users-workers` : Usuarios y trabajadores
+	- `GET /users/loan` : Usuarios con préstamos
+	- `GET /users/librains` : Listar bibliotecarias
 
-* 📘 Libros
-* 👤 Usuarios
-* 💰 Transacciones
-* 🔄 Préstamos/Ventas
+- Transacciones (`/transaction`)
+	- `POST /transaction` : Crear transacción (préstamo/venta)
+	- `GET /transaction/details` : Detalle de transacciones
+	- `GET /transaction/comedia` : Reporte para categoría Comedia
+	- `GET /transaction/ventas` : Ventas en el año
 
-Faltan consultas avanzadas y reportes estadísticos.
+## Requisitos
+
+- Node.js 18+ (recomendado)
+- MySQL accesible
+
+## Variables de entorno
+
+Crear un archivo `.env` en la raíz con al menos las siguientes variables:
+
+```
+DB_HOST=localhost
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_NAME=tu_basedatos
+```
+
+Nota: `Src/Db/Db.js` lee estas variables para configurar el pool de conexiones.
+
+## Instalación y ejecución
+
+1. Instalar dependencias:
+
+```bash
+npm install
+```
+
+2. Crear `.env` con la configuración de la base de datos (ver sección anterior).
+
+3. Ejecutar en modo desarrollo:
+
+```bash
+npm run dev
+```
+
+El servidor arranca en `http://localhost:8080` y CORS está configurado para `http://localhost:5173` (frontend).
+
