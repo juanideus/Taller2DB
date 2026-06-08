@@ -137,6 +137,34 @@ export async function getDetailsTransaction(data) {
     throw new HandleError("Error interno del servidor", 500);
   }
 }
+//Los 10 Libros más vendidos de la categoría Ficción durante el primer semestre del año 2025.
+export async function showMostSellFiction() {
+  try {
+    const querySearch = `SELECT l.Nombre FROM libro l, transaccion t, copia_libro cl 
+WHERE l.Genero = 'Ficción' 
+  AND t.es_venta = 1
+  AND t.Copia_libroid = cl.id 
+  AND cl.Libroid = l.id 
+  AND t.Fecha >= '2026-01-01' 
+  AND t.Fecha <= '2026-07-31' 
+GROUP BY l.id 
+ORDER BY COUNT(t.id) DESC 
+LIMIT 10;`;
+
+    const result = await executeQuery(querySearch);
+    console.log(result);
+    if (result.length === 0) {
+      throw new HandleError("No hay libros de Ficción vendidos", 404);
+    }
+    return result;
+  } catch (error) {
+    if (error instanceof HandleError) {
+      throw error;
+    }
+    throw new HandleError("Error interno del servidor", 500);
+  }
+}
+
 //Los 10 libros menos prestados de la categoría Comedia durante el segundo semestre del
 //año 2025.
 export async function showLessLoanComedy() {
